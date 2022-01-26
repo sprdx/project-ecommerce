@@ -39,9 +39,9 @@ func (newProduct *Product) Validate() string {
 	if err != nil {
 		return "Invalid detail"
 	}
-	err = validate.Var(newProduct.Rating, "required,number,gt=0")
-	if err != nil {
-		return "Invalid rating"
-	}
+	// err = validate.Var(newProduct.Rating, "required,number,gt=0,lte=5")
+	// if err != nil {
+	// 	return "Invalid rating"
+	// }
 	return "OK"
 }

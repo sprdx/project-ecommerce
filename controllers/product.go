@@ -27,3 +27,12 @@ func CreateProductController(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.SuccessResponseNonData("Successful creating a new product"))
 }
+
+func GetAllProductsController(c echo.Context) error {
+	products, err := databases.GetAllProducts()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))
+	}
+
+	return c.JSON(http.StatusOK, responses.SuccessResponseData("Successful operation", products))
+}

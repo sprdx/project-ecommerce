@@ -11,8 +11,9 @@ import (
 func New() *echo.Echo {
 	e := echo.New()
 
-	e.POST("/users", controllers.CreateUserController)
 	e.POST("/login", controllers.LoginUserController)
+	e.POST("/users", controllers.CreateUserController)
+	e.GET("/products", controllers.GetAllProductsController)
 
 	r := e.Group("/jwt")
 	r.Use(middleware.JWT([]byte(constants.SECRET_JWT)))

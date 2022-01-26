@@ -13,3 +13,13 @@ func CreateProduct(newProduct *models.Product) (interface{}, error) {
 
 	return newProduct, nil
 }
+
+func GetAllProducts() (interface{}, error) {
+	var products *[]models.Product
+	tx := config.DB.Find(&products)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	return products, nil
+}
