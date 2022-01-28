@@ -23,3 +23,13 @@ func GetAllProducts() (interface{}, error) {
 
 	return products, nil
 }
+
+func GetProductById(id int) (interface{}, error) {
+	var product models.User
+	tx := config.DB.Where("id = ?", id).First(&product)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	return product, nil
+}

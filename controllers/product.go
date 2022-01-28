@@ -6,6 +6,7 @@ import (
 	"project-ecommerce/middlewares"
 	"project-ecommerce/models"
 	"project-ecommerce/responses"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -35,4 +36,18 @@ func GetAllProductsController(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, responses.SuccessResponseData("Successful operation", products))
+}
+
+func GetProductByIdController(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Invalid ID"))
+	}
+
+	product, err := databases.GetProductById(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error occured"))
+	}
+
+	return c.JSON(http.StatusOK, responses.SuccessResponseData("Successful Operation", product))
 }
