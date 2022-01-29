@@ -35,3 +35,14 @@ func GetCartControllers(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.SuccessResponseData("Successful Operation", data))
 }
+
+func DeleteCartControllers(c echo.Context) error {
+	productId, _ := strconv.Atoi(c.Param("id"))
+	userId := middlewares.ExtractTokenUserId(c)
+	err := databases.DeleteCart(userId, productId)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))
+	}
+
+	return c.JSON(http.StatusOK, responses.SuccessResponseNonData("Successful Operation"))
+}
