@@ -25,7 +25,7 @@ func GetAllProducts() (interface{}, error) {
 }
 
 func GetProductById(id int) (interface{}, error) {
-	var product models.User
+	var product models.Product
 	tx := config.DB.Where("id = ?", id).First(&product)
 	if tx.Error != nil {
 		return nil, tx.Error
