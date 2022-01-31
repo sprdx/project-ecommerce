@@ -53,7 +53,7 @@ func GetUserById(userId int) (interface{}, error) {
 
 	userData := models.GetUser{
 		ID:        user.ID,
-		Name:      user.User_name,
+		Name:      user.Username,
 		Email:     user.Email,
 		Birthdate: user.Birthdate,
 		Gender:    user.Gender,

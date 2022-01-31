@@ -11,10 +11,12 @@ import (
 func New() *echo.Echo {
 	e := echo.New()
 
+	e.GET("/ping", controllers.HelloControllers)
 	e.POST("/login", controllers.LoginUserController)
 	e.POST("/users", controllers.CreateUserController)
 	e.GET("/products", controllers.GetAllProductsController)
 	e.GET("/products/:id", controllers.GetProductByIdController)
+	e.POST("/orders", controllers.CreateOrderControllers)
 
 	r := e.Group("/jwt")
 	r.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
@@ -23,5 +25,6 @@ func New() *echo.Echo {
 	r.POST("/carts/products/:id", controllers.CreateCartControllers)
 	r.GET("/carts", controllers.GetCartControllers)
 	r.DELETE("/carts/products/:id", controllers.DeleteCartControllers)
+
 	return e
 }

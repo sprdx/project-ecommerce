@@ -7,19 +7,30 @@ import (
 
 type Product struct {
 	gorm.Model
-	Product_name string  `json:"name" form:"name"`
-	Category     string  `json:"category" form:"category"`
-	Price        float64 `json:"price" form:"price"`
-	Stock        uint    `json:"stock" form:"stock"`
-	Detail       string  `json:"detail" form:"detail"`
-	Rating       float64 `json:"rating" form:"rating"`
-	Photo        string  `json:"photo" form:"photo"`
-	UserID       uint
+	ProductName string  `json:"product_name" form:"product_name"`
+	Category    string  `json:"category" form:"category"`
+	Price       float64 `json:"price" form:"price"`
+	Stock       uint    `json:"stock" form:"stock"`
+	Detail      string  `json:"detail" form:"detail"`
+	Rating      float64 `json:"rating" form:"rating"`
+	Photo       string  `json:"photo" form:"photo"`
+	UserID      uint
+}
+
+type GetProduct struct {
+	ProductName string
+	Category    string
+	Price       float64
+	Stock       uint
+	Detail      string
+	Rating      float64
+	Photo       string
+	UserID      uint
 }
 
 func (newProduct *Product) Validate() string {
 	validate := validator.New()
-	err := validate.Var(newProduct.Product_name, "required,min=3,max=35,startsnotwith= ,endsnotwith= ")
+	err := validate.Var(newProduct.ProductName, "required,min=3,max=35,startsnotwith= ,endsnotwith= ")
 	if err != nil {
 		return "Invalid name of product"
 	}

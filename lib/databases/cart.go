@@ -16,7 +16,7 @@ func CreateCart(newCart *models.Cart) (interface{}, error) {
 		Price: product.Price,
 	}
 
-	newCart.Total_Price = product.Price * float64(newCart.Quantity)
+	newCart.TotalPrice = product.Price * float64(newCart.Quantity)
 
 	tx2 := config.DB.Create(&newCart)
 	if tx2.Error != nil {
