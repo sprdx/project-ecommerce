@@ -15,6 +15,7 @@ type Product struct {
 	Rating      float64 `json:"rating" form:"rating"`
 	Photo       string  `json:"photo" form:"photo"`
 	UserID      uint
+	Carts       []Cart
 }
 
 type GetProduct struct {

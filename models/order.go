@@ -4,10 +4,19 @@ import "gorm.io/gorm"
 
 type Order struct {
 	gorm.Model
-	Payment Payment
+	Quantity     uint
+	TotalPrice   float64 `json:"total_price" form:"total_price"`
+	Status       string  `gorm:"default:on processing"`
+	UserID       uint
+	OrderDetails []OrderDetail
 }
 
-type Payment struct {
-	E_Wallet string  `json:"wallet"`
-	Amount   float64 `json:"amount"`
+type OrderDetail struct {
+	gorm.Model
+	CartID  uint
+	OrderID uint
+}
+
+type OrderRequest struct {
+	CartIDList []uint `json:"cart_id_list" form:"cart_id_list"`
 }

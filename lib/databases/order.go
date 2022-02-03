@@ -5,10 +5,8 @@ import (
 	"project-ecommerce/models"
 )
 
-func CreateOrder(newPayment models.Payment) error {
-	var order models.Order
-	order.Payment = newPayment
-	tx := config.DB.Create(&order)
+func CreateOrder(newOrder *models.Order) error {
+	tx := config.DB.Create(&newOrder)
 	if tx.Error != nil {
 		return tx.Error
 	}

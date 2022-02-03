@@ -18,8 +18,9 @@ type User struct {
 	Gender    string
 	Phone     string
 	Photo     string
-	Product   []Product
-	Cart      []Cart
+	Products  []Product
+	Carts     []Cart
+	Orders    []Order
 }
 
 type GetUser struct {

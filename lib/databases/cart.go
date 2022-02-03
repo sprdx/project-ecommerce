@@ -50,3 +50,12 @@ func DeleteCart(userId int, productId int) error {
 
 	return nil
 }
+
+func GetDetailCart(id int) (uint, float64, error) {
+	var cart models.GetCart
+	tx := config.DB.Where("id = ? AND deleted_at IS NULL", id).First(&cart)
+	if tx.Error != nil {
+		return 0, 0, tx.Error
+	}
+	return cart.Quantity, cart.TotalPrice, nil
+}
