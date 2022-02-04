@@ -21,9 +21,10 @@ func New() *echo.Echo {
 	r.GET("/users/:id", controllers.GetUserByIdController)
 	r.POST("/products", controllers.CreateProductController)
 	r.POST("/carts/products/:id", controllers.CreateCartControllers)
-	r.GET("/carts", controllers.GetCartControllers)
+	r.GET("/carts", controllers.GetUserCartsControllers)
 	r.DELETE("/carts/products/:id", controllers.DeleteCartControllers)
 	r.POST("/orders", controllers.CreateOrderControllers)
+	r.GET("/orders", controllers.GetUserOrdersControllers)
 
 	return e
 }

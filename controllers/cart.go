@@ -26,7 +26,7 @@ func CreateCartControllers(c echo.Context) error {
 	return c.JSON(http.StatusOK, responses.SuccessResponseNonData("Successful Operation"))
 }
 
-func GetCartControllers(c echo.Context) error {
+func GetUserCartsControllers(c echo.Context) error {
 	id := middlewares.ExtractTokenUserId(c)
 	data, err := databases.GetCart(id)
 	if err != nil {
