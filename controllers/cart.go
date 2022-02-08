@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func CreateCartControllers(c echo.Context) error {
+func CreateCartController(c echo.Context) error {
 	var newCart models.Cart
 	id, _ := strconv.Atoi(c.Param("id"))
 	newCart.ProductID = uint(id)
@@ -26,7 +26,7 @@ func CreateCartControllers(c echo.Context) error {
 	return c.JSON(http.StatusOK, responses.SuccessResponseNonData("Successful Operation"))
 }
 
-func GetUserCartsControllers(c echo.Context) error {
+func GetUserCartsController(c echo.Context) error {
 	id := middlewares.ExtractTokenUserId(c)
 	data, err := databases.GetCart(id)
 	if err != nil {
@@ -36,7 +36,7 @@ func GetUserCartsControllers(c echo.Context) error {
 	return c.JSON(http.StatusOK, responses.SuccessResponseData("Successful Operation", data))
 }
 
-func DeleteCartControllers(c echo.Context) error {
+func DeleteCartController(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
 	userId := middlewares.ExtractTokenUserId(c)
 	err := databases.DeleteCart(userId, productId)

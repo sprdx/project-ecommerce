@@ -20,11 +20,12 @@ func New() *echo.Echo {
 	r.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
 	r.GET("/users/:id", controllers.GetUserByIdController)
 	r.POST("/products", controllers.CreateProductController)
-	r.POST("/carts/products/:id", controllers.CreateCartControllers)
-	r.GET("/carts", controllers.GetUserCartsControllers)
-	r.DELETE("/carts/products/:id", controllers.DeleteCartControllers)
-	r.POST("/orders", controllers.CreateOrderControllers)
-	r.GET("/orders", controllers.GetUserOrdersControllers)
+	r.POST("/carts/products/:id", controllers.CreateCartController)
+	r.GET("/carts", controllers.GetUserCartsController)
+	r.DELETE("/carts/products/:id", controllers.DeleteCartController)
+	r.POST("/orders", controllers.CreateOrderController)
+	r.GET("/orders", controllers.GetUserOrdersController)
+	r.GET("/orders/:id", controllers.GetUserOrderDetailsController)
 
 	return e
 }
