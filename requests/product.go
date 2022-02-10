@@ -41,6 +41,41 @@ func (data *CreateProduct) Validate() string {
 	return "VALID"
 }
 
+func (data *CreateProduct) ValidateUpdateProduct() string {
+	validate := validator.New()
+	if len(data.ProductName) != 0 {
+		err := validate.Var(data.ProductName, "required,min=3,max=35,startsnotwith= ,endsnotwith= ")
+		if err != nil {
+			return "Invalid name of product"
+		}
+	}
+	if len(data.Category) != 0 {
+		err := validate.Var(data.Category, "required,alpha,startsnotwith= ,endsnotwith= ")
+		if err != nil {
+			return "Invalid product category"
+		}
+	}
+	if data.Price != 0 {
+		err := validate.Var(data.Price, "required,number,gte=1000")
+		if err != nil {
+			return "Invalid price"
+		}
+	}
+	if data.Stock != 0 {
+		err := validate.Var(data.Stock, "required,number,gt=0")
+		if err != nil {
+			return "Invalid stock"
+		}
+	}
+	if len(data.Detail) != 0 {
+		err := validate.Var(data.Detail, "required")
+		if err != nil {
+			return "Invalid detail"
+		}
+	}
+	return "VALID"
+}
+
 func BindProductData(c echo.Context, data *CreateProduct) (*models.Product, string) {
 	c.Bind(&data)
 	var product models.Product
@@ -57,4 +92,31 @@ func BindProductData(c echo.Context, data *CreateProduct) (*models.Product, stri
 	product.UserID = uint(middlewares.ExtractTokenUserId(c))
 
 	return &product, message
+}
+
+func BindUpdateProductData(c echo.Context, data *CreateProduct, prod *models.Product) string {
+	c.Bind(&data)
+
+	message := data.ValidateUpdateProduct()
+	if message != "VALID" {
+		return message
+	}
+
+	if data.ProductName != "" {
+		prod.ProductName = data.ProductName
+	}
+	if data.Category != "" {
+		prod.Category = data.Category
+	}
+	if data.Price != 0 {
+		prod.Price = data.Price
+	}
+	if data.Stock != 0 {
+		prod.Stock = data.Stock
+	}
+	if data.Detail != "" {
+		prod.Detail = data.Detail
+	}
+
+	return message
 }

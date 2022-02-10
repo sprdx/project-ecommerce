@@ -21,6 +21,7 @@ func New() *echo.Echo {
 	r.GET("/users/:id", controllers.GetUserByIdController)
 	r.PATCH("/users/:id", controllers.UpdateUserByIdController)
 	r.POST("/products", controllers.CreateProductController)
+	r.PUT("/products/:id", controllers.UpdateProductController)
 	r.POST("/carts/products/:id", controllers.CreateCartController)
 	r.GET("/carts", controllers.GetUserCartsController)
 	r.DELETE("/carts/products/:id", controllers.DeleteCartController)

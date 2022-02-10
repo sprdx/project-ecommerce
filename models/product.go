@@ -18,6 +18,7 @@ type Product struct {
 }
 
 type GetProduct struct {
+	ID          uint
 	ProductName string
 	Category    string
 	Price       float64

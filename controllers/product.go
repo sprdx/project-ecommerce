@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"project-ecommerce/lib/databases"
+	"project-ecommerce/middlewares"
 	"project-ecommerce/requests"
 	"project-ecommerce/responses"
 	"strconv"
@@ -47,4 +48,36 @@ func GetProductByIdController(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, responses.SuccessResponseData("Successful Operation", product))
+}
+
+func UpdateProductController(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Invalid ID"))
+	}
+
+	product, err := databases.GetTheProduct(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Data not found"))
+	}
+
+	// Check if id from token is match to inputted id
+	tokenUserId := middlewares.ExtractTokenUserId(c)
+	if tokenUserId != int(product.UserID) {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Access forbidden"))
+	}
+
+	var updateData requests.CreateProduct
+
+	message := requests.BindUpdateProductData(c, &updateData, product)
+	if message != "VALID" {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse(message))
+	}
+
+	err = databases.UpdateProduct(product)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error occured"))
+	}
+
+	return c.JSON(http.StatusOK, responses.SuccessResponseNonData("Successful Operation"))
 }
