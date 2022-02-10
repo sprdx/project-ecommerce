@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -17,12 +16,11 @@ import (
 func CreateUserController(c echo.Context) error {
 	var data requests.CreateUser
 	var newUser models.User
-	fmt.Println("user", newUser)
+
 	message := requests.BindUserData(c, &data, &newUser)
 	if message != "VALID" {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse(message))
 	}
-	fmt.Println("user", newUser)
 	// Insert value of user struct into database
 	_, err := databases.CreateUser(&newUser)
 	if err != nil {

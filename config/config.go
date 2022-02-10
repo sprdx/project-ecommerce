@@ -20,12 +20,12 @@ func InitDB() {
 		panic("Failed to connect database")
 	}
 
-	//Migrate the database schema
+	// Migrate the database schema
 	// InitMigration()
 }
 
 // Declare function to auto-migrate the schema
-func InitMigration() {
-	// DB.Migrator().DropTable(&models.User{}, &models.Product{}, &models.Cart{}, &models.Order{}, &models.OrderDetail{})
-	// DB.AutoMigrate(&models.User{}, &models.Product{}, &models.Cart{}, &models.Order{}, &models.OrderDetail{})
-}
+// func InitMigration() {
+// 	DB.Migrator().DropTable(&models.User{}, &models.Product{}, &models.Cart{}, &models.Order{}, &models.OrderDetail{})
+// 	DB.AutoMigrate(&models.User{}, &models.Product{}, &models.Cart{}, &models.Order{}, &models.OrderDetail{})
+// }

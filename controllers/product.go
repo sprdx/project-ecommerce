@@ -3,8 +3,7 @@ package controllers
 import (
 	"net/http"
 	"project-ecommerce/lib/databases"
-	"project-ecommerce/middlewares"
-	"project-ecommerce/models"
+	"project-ecommerce/requests"
 	"project-ecommerce/responses"
 	"strconv"
 
@@ -12,16 +11,14 @@ import (
 )
 
 func CreateProductController(c echo.Context) error {
-	var newProduct models.Product
-	c.Bind(&newProduct)
-	newProduct.UserID = uint(middlewares.ExtractTokenUserId(c))
+	var data requests.CreateProduct
 
-	message := newProduct.Validate()
-	if message != "OK" {
+	product, message := requests.BindProductData(c, &data)
+	if message != "VALID" {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse(message))
 	}
 
-	_, err := databases.CreateProduct(&newProduct)
+	_, err := databases.CreateProduct(product)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))
 	}

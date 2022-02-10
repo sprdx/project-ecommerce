@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
 
@@ -26,34 +25,5 @@ type GetProduct struct {
 	Detail      string
 	Rating      float64
 	Photo       string
-	UserID      uint
-}
-
-func (newProduct *Product) Validate() string {
-	validate := validator.New()
-	err := validate.Var(newProduct.ProductName, "required,min=3,max=35,startsnotwith= ,endsnotwith= ")
-	if err != nil {
-		return "Invalid name of product"
-	}
-	err = validate.Var(newProduct.Category, "required,alpha,startsnotwith= ,endsnotwith= ")
-	if err != nil {
-		return "Invalid product category"
-	}
-	err = validate.Var(newProduct.Price, "required,number,gte=1000")
-	if err != nil {
-		return "Invalid price"
-	}
-	err = validate.Var(newProduct.Stock, "required,number,gt=0")
-	if err != nil {
-		return "Invalid stock"
-	}
-	err = validate.Var(newProduct.Detail, "required")
-	if err != nil {
-		return "Invalid detail"
-	}
-	// err = validate.Var(newProduct.Rating, "required,number,gt=0,lte=5")
-	// if err != nil {
-	// 	return "Invalid rating"
-	// }
-	return "OK"
+	Seller      string
 }

@@ -111,6 +111,9 @@ func (data *UpdateUser) ValidateUpdateData() string {
 func BindUserData(c echo.Context, data *CreateUser, user *models.User) string {
 	c.Bind(&data)
 	message := data.Validate()
+	if message != "VALID" {
+		return message
+	}
 
 	user.Username = data.Username
 	user.Email = data.Email
