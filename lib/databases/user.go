@@ -33,24 +33,16 @@ func LoginUser(user *models.User) (interface{}, error) {
 }
 
 func GetUserById(userId int) (interface{}, error) {
-	var user models.User
-	tx := config.DB.Where("id = ?", userId).First(&user)
+	var user models.GetUser
+	tx := config.DB.Select("id, username AS name, email, birthdate, gender, phone, photo").First(&models.User{}, userId).Scan(&user)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
 
-	birthdate := fmt.Sprint(user.Birthdate)
-	data := models.GetUser{
-		ID:        user.ID,
-		Name:      user.Username,
-		Email:     user.Email,
-		Birthdate: birthdate[:10],
-		Gender:    user.Gender,
-		Phone:     user.Phone,
-		Photo:     user.Photo,
-	}
+	user.Birthdate = fmt.Sprint(user.Birthdate)
+	user.Birthdate = user.Birthdate[:10]
 
-	return data, nil
+	return user, nil
 }
 
 func GetUserByEmail(email string) (*models.User, int64) {

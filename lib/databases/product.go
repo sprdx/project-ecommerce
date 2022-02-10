@@ -16,7 +16,7 @@ func CreateProduct(newProduct *models.Product) (interface{}, error) {
 
 func GetAllProducts() (interface{}, error) {
 	var products []models.GetProduct
-	tx := config.DB.Table("products").Select("products.product_name, products.category, products.price, products.stock, products.detail, products.rating, products.photo, users.username AS seller").Joins("INNER JOIN products on products.user_id = users.id").Where("products.deleted_at IS NULL").Scan(&products)
+	tx := config.DB.Model(&models.Product{}).Select("products.id, products.product_name, products.category, products.price, products.stock, products.detail, products.rating, products.photo, users.username AS seller").Joins("inner join users on products.user_id = users.id").Scan(&products)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
