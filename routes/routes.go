@@ -19,6 +19,7 @@ func New() *echo.Echo {
 	r := e.Group("/jwt")
 	r.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
 	r.GET("/users/:id", controllers.GetUserByIdController)
+	r.PATCH("/users/:id", controllers.UpdateUserByIdController)
 	r.POST("/products", controllers.CreateProductController)
 	r.POST("/carts/products/:id", controllers.CreateCartController)
 	r.GET("/carts", controllers.GetUserCartsController)

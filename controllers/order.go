@@ -55,7 +55,7 @@ func GetUserOrdersController(c echo.Context) error {
 }
 
 func GetUserOrderDetailsController(c echo.Context) error {
-	orderId, err := strconv.Atoi(c.Param("id"))
+	orderId, _ := strconv.Atoi(c.Param("id"))
 	data, err := databases.GetOrderDetails(orderId)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))

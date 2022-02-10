@@ -1,11 +1,9 @@
 package databases
 
 import (
+	"fmt"
 	"project-ecommerce/config"
-	"project-ecommerce/middlewares"
 	"project-ecommerce/models"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 func CreateUser(newUser *models.User) (interface{}, error) {
@@ -18,30 +16,20 @@ func CreateUser(newUser *models.User) (interface{}, error) {
 	return newUser, nil
 }
 
-func LoginUser(userData *models.User) (interface{}, error) {
-	var user models.User
-	// Check if user's login email is exist in database
-	tx := config.DB.Where("email = ?", userData.Email).First(&user)
+func LoginUser(user *models.User) (interface{}, error) {
+	// Update value of user token into database
+	tx := config.DB.Save(&user)
 	if tx.Error != nil || tx.RowsAffected == 0 {
 		return nil, tx.Error
 	}
-
-	// Check if inputed password is match to password in database
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userData.Password))
-	if err != nil {
-		return nil, err
+	var data = struct {
+		ID    uint
+		Token string
+	}{
+		ID:    user.ID,
+		Token: user.Token,
 	}
-
-	// Generate token by using user's ID
-	user.Token, _ = middlewares.CreateToken(int(user.ID))
-
-	// Update value of user token into database
-	tx2 := config.DB.Save(&user)
-	if tx2.Error != nil || tx.RowsAffected == 0 {
-		return nil, tx.Error
-	}
-
-	return user.Token, nil
+	return data, nil
 }
 
 func GetUserById(userId int) (interface{}, error) {
@@ -51,15 +39,42 @@ func GetUserById(userId int) (interface{}, error) {
 		return nil, tx.Error
 	}
 
-	userData := models.GetUser{
+	birthdate := fmt.Sprint(user.Birthdate)
+	data := models.GetUser{
 		ID:        user.ID,
 		Name:      user.Username,
 		Email:     user.Email,
-		Birthdate: user.Birthdate,
+		Birthdate: birthdate[:10],
 		Gender:    user.Gender,
 		Phone:     user.Phone,
 		Photo:     user.Photo,
 	}
 
-	return userData, nil
+	return data, nil
+}
+
+func GetUserByEmail(email string) (*models.User, int64) {
+	var user models.User
+	tx := config.DB.Where("email = ?", email).First(&user)
+	if tx.RowsAffected == 1 {
+		return &user, 1
+	}
+	return &user, 0
+}
+
+func GetUser(id int) (*models.User, int64) {
+	var user models.User
+	tx := config.DB.Where("id = ?", id).First(&user)
+	if tx.RowsAffected == 1 {
+		return &user, 1
+	}
+	return &user, 0
+}
+
+func UpdateUser(user *models.User) error {
+	tx := config.DB.Save(&user)
+	if tx.Error != nil || tx.RowsAffected == 0 {
+		return tx.Error
+	}
+	return nil
 }

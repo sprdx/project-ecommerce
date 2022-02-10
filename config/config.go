@@ -1,8 +1,6 @@
 package config
 
 import (
-	"project-ecommerce/models"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -23,11 +21,11 @@ func InitDB() {
 	}
 
 	//Migrate the database schema
-	InitMigration()
+	// InitMigration()
 }
 
 // Declare function to auto-migrate the schema
 func InitMigration() {
 	// DB.Migrator().DropTable(&models.User{}, &models.Product{}, &models.Cart{}, &models.Order{}, &models.OrderDetail{})
-	DB.AutoMigrate(&models.User{}, &models.Product{}, &models.Cart{}, &models.Order{}, &models.OrderDetail{})
+	// DB.AutoMigrate(&models.User{}, &models.Product{}, &models.Cart{}, &models.Order{}, &models.OrderDetail{})
 }
