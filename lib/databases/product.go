@@ -1,6 +1,7 @@
 package databases
 
 import (
+	"fmt"
 	"project-ecommerce/config"
 	"project-ecommerce/models"
 )
@@ -45,14 +46,14 @@ func GetProductById(id int) (interface{}, error) {
 	return product, nil
 }
 
-func GetTheProduct(id int) (*models.Product, error) {
+func GetTheProduct(id int) (models.Product, error) {
 	var product models.Product
-	tx := config.DB.Where("deleted_at IS NULL").First(&models.Product{}, id)
+	tx := config.DB.Where("deleted_at IS NULL").First(&product, id)
 	if tx.Error != nil || tx.RowsAffected == 0 {
-		return &product, tx.Error
+		return product, tx.Error
 	}
-
-	return &product, nil
+	fmt.Println(product)
+	return product, nil
 }
 
 func UpdateProduct(product *models.Product) error {

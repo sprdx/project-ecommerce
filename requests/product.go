@@ -96,7 +96,7 @@ func BindProductData(c echo.Context, data *CreateProduct) (*models.Product, stri
 
 func BindUpdateProductData(c echo.Context, data *CreateProduct, prod *models.Product) string {
 	c.Bind(&data)
-
+	var countUpdate int
 	message := data.ValidateUpdateProduct()
 	if message != "VALID" {
 		return message
@@ -104,18 +104,26 @@ func BindUpdateProductData(c echo.Context, data *CreateProduct, prod *models.Pro
 
 	if data.ProductName != "" {
 		prod.ProductName = data.ProductName
+		countUpdate++
 	}
 	if data.Category != "" {
 		prod.Category = data.Category
+		countUpdate++
 	}
 	if data.Price != 0 {
 		prod.Price = data.Price
+		countUpdate++
 	}
 	if data.Stock != 0 {
 		prod.Stock = data.Stock
+		countUpdate++
 	}
 	if data.Detail != "" {
 		prod.Detail = data.Detail
+		countUpdate++
+	}
+	if countUpdate == 0 {
+		message = "No data have been updated"
 	}
 
 	return message

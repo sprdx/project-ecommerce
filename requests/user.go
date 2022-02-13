@@ -147,6 +147,8 @@ func BindLoginData(c echo.Context, data *LoginUser) (*models.User, string) {
 
 func BindUpdateData(c echo.Context, data *UpdateUser, id int) (*models.User, string) {
 	c.Bind(&data)
+	var countUpdate int
+
 	message := data.ValidateUpdateData()
 	if message != "VALID" {
 		var user *models.User
@@ -160,18 +162,26 @@ func BindUpdateData(c echo.Context, data *UpdateUser, id int) (*models.User, str
 
 	if data.Username != "" {
 		user.Username = data.Username
+		countUpdate++
 	}
 	if data.Email != "" {
 		user.Email = data.Email
+		countUpdate++
 	}
 	if data.Birthdate != "" {
 		user.Birthdate, _ = time.Parse("2006-01-02", data.Birthdate)
+		countUpdate++
 	}
 	if data.Gender != "" {
 		user.Gender = data.Gender
+		countUpdate++
 	}
 	if data.Phone != "" {
 		user.Phone = data.Phone
+		countUpdate++
+	}
+	if countUpdate == 0 {
+		message = "No data have been updated"
 	}
 	return user, message
 }

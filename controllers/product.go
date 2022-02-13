@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"project-ecommerce/lib/databases"
 	"project-ecommerce/middlewares"
@@ -60,21 +61,22 @@ func UpdateProductController(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Data not found"))
 	}
-
+	fmt.Println(product)
 	// Check if id from token is match to inputted id
 	tokenUserId := middlewares.ExtractTokenUserId(c)
+	fmt.Println(tokenUserId, "==", int(product.UserID))
 	if tokenUserId != int(product.UserID) {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Access forbidden"))
 	}
 
 	var updateData requests.CreateProduct
 
-	message := requests.BindUpdateProductData(c, &updateData, product)
+	message := requests.BindUpdateProductData(c, &updateData, &product)
 	if message != "VALID" {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse(message))
 	}
 
-	err = databases.UpdateProduct(product)
+	err = databases.UpdateProduct(&product)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error occured"))
 	}
@@ -99,7 +101,7 @@ func DeleteProductController(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Access forbidden"))
 	}
 
-	err = databases.DeleteProduct(product)
+	err = databases.DeleteProduct(&product)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error occured"))
 	}
