@@ -81,3 +81,28 @@ func UpdateProductController(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.SuccessResponseNonData("Successful Operation"))
 }
+
+func DeleteProductController(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Invalid ID"))
+	}
+
+	product, err := databases.GetTheProduct(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Data not found"))
+	}
+
+	// Check if id from token is match to inputted id
+	tokenUserId := middlewares.ExtractTokenUserId(c)
+	if tokenUserId != int(product.UserID) {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Access forbidden"))
+	}
+
+	err = databases.DeleteProduct(product)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error occured"))
+	}
+
+	return c.JSON(http.StatusOK, responses.SuccessResponseNonData("Successful Operation"))
+}

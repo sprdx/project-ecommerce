@@ -10,6 +10,7 @@ import (
 
 func New() *echo.Echo {
 	e := echo.New()
+	e.Debug = true
 
 	e.POST("/login", controllers.LoginUserController)
 	e.POST("/users", controllers.CreateUserController)
@@ -22,6 +23,7 @@ func New() *echo.Echo {
 	r.PATCH("/users/:id", controllers.UpdateUserByIdController)
 	r.POST("/products", controllers.CreateProductController)
 	r.PUT("/products/:id", controllers.UpdateProductController)
+	r.DELETE("/products/:id", controllers.DeleteProductController)
 	r.POST("/carts/products/:id", controllers.CreateCartController)
 	r.GET("/carts", controllers.GetUserCartsController)
 	r.DELETE("/carts/products/:id", controllers.DeleteCartController)
