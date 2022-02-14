@@ -1,6 +1,7 @@
 package databases
 
 import (
+	"fmt"
 	"project-ecommerce/config"
 	"project-ecommerce/models"
 )
@@ -13,6 +14,7 @@ func CreateCart(newCart *models.Cart) (interface{}, error) {
 		if tx.Error != nil {
 			return nil, tx.Error
 		}
+		return newCart, nil
 	}
 	newCart.Quantity += cart.Quantity
 	tx := config.DB.Where("id = ?", cart.ID).Save(&newCart)
@@ -25,17 +27,20 @@ func CreateCart(newCart *models.Cart) (interface{}, error) {
 
 func GetCart(userId int) (interface{}, error) {
 	var carts []models.GetCart
-
-	check := config.DB.Where("user_id = ? AND deleted_at IS NULL", userId).Find(&models.Cart{})
-	if check.Error != nil {
+	var cart []models.Cart
+	fmt.Println("1")
+	check := config.DB.Find(&cart)
+	if check.RowsAffected == 0 {
+		fmt.Println("a")
 		return nil, check.Error
 	}
-
+	fmt.Println("2", cart)
 	tx := config.DB.Model(&models.Cart{}).Select("carts.id, products.product_name, carts.quantity, (products.price * carts.quantity) AS total_price").Joins("INNER JOIN products on products.id = carts.product_id").Scan(&carts)
-	if tx.Error != nil || tx.RowsAffected == 0 {
+	if tx.Error != nil {
+		fmt.Println("b")
 		return nil, tx.Error
 	}
-
+	fmt.Println("3")
 	return carts, nil
 }
 

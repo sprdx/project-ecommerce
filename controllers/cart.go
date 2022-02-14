@@ -29,8 +29,8 @@ func CreateCartController(c echo.Context) error {
 func GetUserCartsController(c echo.Context) error {
 	userId := middlewares.ExtractTokenUserId(c)
 	data, err := databases.GetCart(userId)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))
+	if data == nil || err != nil {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Cart is empty"))
 	}
 
 	return c.JSON(http.StatusOK, responses.SuccessResponseData("Successful Operation", data))
