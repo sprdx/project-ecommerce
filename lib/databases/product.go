@@ -1,7 +1,6 @@
 package databases
 
 import (
-	"fmt"
 	"project-ecommerce/config"
 	"project-ecommerce/models"
 )
@@ -52,7 +51,6 @@ func GetTheProduct(id int) (models.Product, error) {
 	if tx.Error != nil || tx.RowsAffected == 0 {
 		return product, tx.Error
 	}
-	fmt.Println(product)
 	return product, nil
 }
 

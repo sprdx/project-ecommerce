@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"project-ecommerce/lib/databases"
 	"project-ecommerce/middlewares"
-	"project-ecommerce/models"
+	"project-ecommerce/requests"
 	"project-ecommerce/responses"
 	"strconv"
 
@@ -12,13 +12,13 @@ import (
 )
 
 func CreateCartController(c echo.Context) error {
-	var newCart models.Cart
-	id, _ := strconv.Atoi(c.Param("id"))
-	newCart.ProductID = uint(id)
-	newCart.UserID = uint(middlewares.ExtractTokenUserId(c))
-	c.Bind(&newCart)
+	var data requests.CreateCart
+	cart, message := requests.BindCartData(c, &data)
+	if message != "VALID" {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse(message))
+	}
 
-	_, err := databases.CreateCart(&newCart)
+	_, err := databases.CreateCart(cart)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))
 	}
