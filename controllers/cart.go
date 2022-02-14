@@ -41,7 +41,7 @@ func DeleteCartController(c echo.Context) error {
 	userId := middlewares.ExtractTokenUserId(c)
 	err := databases.DeleteCart(userId, productId)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("Cart ID is not found"))
 	}
 
 	return c.JSON(http.StatusOK, responses.SuccessResponseNonData("Successful Operation"))
