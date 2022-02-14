@@ -4,8 +4,7 @@ import "gorm.io/gorm"
 
 type Cart struct {
 	gorm.Model
-	Quantity    uint    `json:"quantity" form:"quantity"`
-	TotalPrice  float64 `json:"total_price" form:"total_price"`
+	Quantity    uint `json:"quantity" form:"quantity"`
 	ProductID   uint
 	UserID      uint
 	OrderDetail OrderDetail

@@ -41,6 +41,9 @@ func GetUserById(userId int) (interface{}, error) {
 
 	user.Birthdate = fmt.Sprint(user.Birthdate)
 	user.Birthdate = user.Birthdate[:10]
+	if user.Birthdate == "0001-01-01" {
+		user.Birthdate = ""
+	}
 
 	return user, nil
 }

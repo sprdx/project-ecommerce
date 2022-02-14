@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -59,6 +60,7 @@ func GetUserByIdController(c echo.Context) error {
 	}
 
 	data, err := databases.GetUserById(tokenUserId)
+	fmt.Println("user", data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error occured"))
 	}

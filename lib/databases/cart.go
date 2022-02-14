@@ -6,30 +6,33 @@ import (
 )
 
 func CreateCart(newCart *models.Cart) (interface{}, error) {
-	var product models.Product
-	tx := config.DB.Where("id = ?", newCart.ProductID).First(&product)
+	var cart *models.Cart
+	check := config.DB.Where(&models.Cart{UserID: newCart.UserID, ProductID: newCart.ProductID}).First(&cart)
+	if check.Error != nil {
+		tx := config.DB.Create(&newCart)
+		if tx.Error != nil {
+			return nil, tx.Error
+		}
+	}
+	newCart.Quantity += cart.Quantity
+	tx := config.DB.Where("id = ?", cart.ID).Save(&newCart)
 	if tx.Error != nil {
 		return nil, tx.Error
-	}
-
-	product = models.Product{
-		Price: product.Price,
-	}
-
-	newCart.TotalPrice = product.Price * float64(newCart.Quantity)
-
-	tx2 := config.DB.Create(&newCart)
-	if tx2.Error != nil {
-		return nil, tx2.Error
 	}
 
 	return newCart, nil
 }
 
-func GetCart(id int) (interface{}, error) {
+func GetCart(userId int) (interface{}, error) {
 	var carts []models.GetCart
-	tx := config.DB.Table("carts").Select("products.product_name, carts.quantity, carts.total_price").Joins("INNER JOIN products on products.id = carts.product_id").Where("carts.user_id = ? AND carts.deleted_at IS NULL", id).Scan(&carts)
-	if tx.Error != nil {
+
+	check := config.DB.Where("user_id = ? AND deleted_at IS NULL", userId).Find(&models.Cart{})
+	if check.Error != nil {
+		return nil, check.Error
+	}
+
+	tx := config.DB.Model(&models.Cart{}).Select("carts.id, products.product_name, carts.quantity, (products.price * carts.quantity) AS total_price").Joins("INNER JOIN products on products.id = carts.product_id").Scan(&carts)
+	if tx.Error != nil || tx.RowsAffected == 0 {
 		return nil, tx.Error
 	}
 
@@ -57,5 +60,5 @@ func GetDetailCart(id int) (uint, float64, error) {
 	if tx.Error != nil {
 		return 0, 0, tx.Error
 	}
-	return cart.Quantity, cart.TotalPrice, nil
+	return cart.Quantity, 0, nil
 }
