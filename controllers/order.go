@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"project-ecommerce/lib/databases"
 	"project-ecommerce/middlewares"
 	"project-ecommerce/models"
+	"project-ecommerce/requests"
 	"project-ecommerce/responses"
 	"strconv"
 
@@ -13,32 +13,24 @@ import (
 )
 
 func CreateOrderController(c echo.Context) error {
-	var newOrderRequest models.OrderRequest
-	var newOrder models.Order
-	c.Bind(&newOrderRequest)
-
-	for _, ID := range newOrderRequest.CartIDList {
-		Quantity, TotalPrice, _ := databases.GetDetailCart(int(ID))
-		fmt.Println("Qty", Quantity)
-		fmt.Println("Total", TotalPrice)
-		newOrder.Quantity += Quantity
-		newOrder.TotalPrice += TotalPrice
+	var newOrder requests.CreateOrder
+	order, message := requests.BindOrderData(c, &newOrder)
+	if message != "VALID" {
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse(message))
 	}
-	newOrder.UserID = uint(middlewares.ExtractTokenUserId(c))
 
-	orderId, err := databases.CreateOrder(&newOrder)
+	orderId, err := databases.CreateOrder(order)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))
+		return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error when create order"))
 	}
 
-	for _, ID := range newOrderRequest.CartIDList {
+	for _, cartId := range newOrder.CartIDList {
 		var newOrderDetail models.OrderDetail
 		newOrderDetail.OrderID = orderId
-		cartId := ID
 		newOrderDetail.CartID = cartId
 		err := databases.CreateOrderDetails(&newOrderDetail)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error ocurred"))
+			return c.JSON(http.StatusBadRequest, responses.BadRequestResponse("A database error when create order details"))
 		}
 	}
 

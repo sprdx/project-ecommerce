@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Order struct {
 	gorm.Model
@@ -17,6 +19,19 @@ type OrderDetail struct {
 	OrderID uint
 }
 
-type OrderRequest struct {
-	CartIDList []uint `json:"cart_id_list" form:"cart_id_list"`
+type GetOrder struct {
+	ID         uint
+	CreatedAt  string
+	Quantity   uint
+	TotalPrice float64
+	Status     string
+	Buyer      string
+}
+
+type GetOrderDetails struct {
+	ID         uint
+	CreatedAt  string
+	Quantity   uint
+	TotalPrice float64
+	OrderID    uint
 }

@@ -28,6 +28,6 @@ func InitDB() {
 
 // Declare function to auto-migrate the schema
 func InitMigration() {
-	DB.Migrator().DropTable(&models.Cart{})
+	// DB.Migrator().DropTable(&models.Cart{})
 	DB.AutoMigrate(&models.User{}, &models.Product{}, &models.Cart{}, &models.Order{}, &models.OrderDetail{})
 }

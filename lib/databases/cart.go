@@ -28,7 +28,7 @@ func GetCart(userId int) (interface{}, error) {
 	var carts []models.GetCart
 	var cart []models.Cart
 
-	check := config.DB.Find(&cart)
+	check := config.DB.Where("user_id = ?", userId).Find(&cart)
 	if check.RowsAffected == 0 {
 		return nil, check.Error
 	}
@@ -57,10 +57,11 @@ func DeleteCart(userId int, productId int) error {
 }
 
 func GetDetailCart(id int) (uint, float64, error) {
-	var cart models.Cart
-	tx := config.DB.Where("id = ? AND deleted_at IS NULL", id).First(&cart)
+	var cart models.GetCart
+	tx := config.DB.Model(&models.Cart{}).Select("carts.id, products.product_name, carts.quantity, (products.price * carts.quantity) AS total_price").Joins("INNER JOIN products on products.id = carts.product_id").Scan(&cart)
 	if tx.Error != nil {
 		return 0, 0, tx.Error
 	}
-	return cart.Quantity, 0, nil
+
+	return cart.Quantity, cart.TotalPrice, nil
 }
