@@ -12,15 +12,15 @@ func New() *echo.Echo {
 	e := echo.New()
 	e.Debug = true
 
-	e.POST("/login", controllers.LoginUserController)
-	e.POST("/users", controllers.CreateUserController)
+	// e.POST("/login", controllers.LoginUserController)
+	// e.POST("/users", controllers.CreateUserController)
 	e.GET("/products", controllers.GetAllProductsController)
 	e.GET("/products/:id", controllers.GetProductByIdController)
 
 	r := e.Group("/jwt")
 	r.Use(middleware.JWT([]byte(constants.SECRET_JWT)))
-	r.GET("/users/:id", controllers.GetUserByIdController)
-	r.PATCH("/users/:id", controllers.UpdateUserByIdController)
+	// r.GET("/users/:id", controllers.GetUserByIdController)
+	// r.PATCH("/users/:id", controllers.UpdateUserByIdController)
 	r.POST("/products", controllers.CreateProductController)
 	r.PUT("/products/:id", controllers.UpdateProductController)
 	r.DELETE("/products/:id", controllers.DeleteProductController)

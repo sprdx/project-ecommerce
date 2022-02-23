@@ -65,7 +65,7 @@ func GetOrderDetails(orderId int) (interface{}, error) {
 		return nil, check.Error
 	}
 
-	tx := config.DB.Model(&models.OrderDetail{}).Select("order_details.id, order_details.created_at, order_details.quantity, order_details.total_price, order_details.order_id").Scan(&orderDetails)
+	tx := config.DB.Model(&models.OrderDetail{}).Select("order_details.id, order_details.created_at, orders.quantity, order_details.total_price, order_details.order_id").Joins("INNER JOIN orders on order_details.order_id = order.id").Scan(&orderDetails)
 	if tx.Error != nil || tx.RowsAffected == 0 {
 		return nil, tx.Error
 	}
